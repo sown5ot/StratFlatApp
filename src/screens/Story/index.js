@@ -25,8 +25,8 @@ import {
   View
 } from "native-base";
 import MapView from "react-native-maps";
-import { getHotelServiceAction } from "./action";
-import { getHotelServiceReducer } from "./reducer";
+import { getHotelServiceAction } from "../../actions/index";
+import { getHotelServiceReducer } from "../../reducers/index";
 import { Grid, Col } from "react-native-easy-grid";
 import { NavigationActions } from "react-navigation";
 import Modal from "react-native-modalbox";
@@ -55,21 +55,27 @@ class Story extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     // BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
+    this.getHotelSerivceData();
+  }
+
+  getHotelSerivceData(){
     const { state } = this.props.navigation;
     var id = state.params.hotelId;
     this.props.getHotelServiceAction(id);
-    if (props.getHotelServiceReducer.success) {
-      var serviceDetail = props.getHotelServiceReducer.data;
+  }
+
+  componentWillReceiveProps(props){
+    console.log(this.props.getHotelServiceReducer.success)
+    if (this.props.getHotelServiceReducer.success) {
+      var serviceDetail = this.props.getHotelServiceReducer.data;
       console.log("12323224244", serviceDetail);
       this.setState({ serviceDetail: serviceDetail });
     } else {
       console.log("qweqweqwe");
     }
   }
-
-  componentWillReceiveProps(props) {}
 
   render() {
     console.log("render");
