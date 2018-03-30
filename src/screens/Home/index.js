@@ -50,11 +50,11 @@ class Home extends Component {
     return (
       <View
         style={{ flexDirection: "row", backgroundColor: "#EEEEEE" }}
-        // onPress={() => this.props.navigation.navigate("Story")}
+        onPress={() => this.props.navigation.navigate("Story")}
 
 
       >
-        {/* <View style={styles.newsContent}>
+        <View style={styles.newsContent}>
           <Text numberOfLines={2} style={styles.newsHeader}>
             {item.headline}
           </Text>
@@ -79,8 +79,8 @@ class Home extends Component {
               </TouchableOpacity>
             </Col>
           </Grid>
-        </View> */}
-        {/* <View
+        </View>
+        <View
           style={{
             margin: 10,
             backgroundColor: "#EEEEEE",
@@ -115,7 +115,7 @@ class Home extends Component {
 
           </View>
 
-        </View> */}
+        </View>
       
       </View>
     );
@@ -145,15 +145,8 @@ class Home extends Component {
             style={{ backgroundColor: "#fff" }}
           >
 
-            {/* <FlatList
-              data={this.props.items}
-              renderItem={this._renderItem}
-              keyExtractor={item => item.id}
-            /> */}
-            {/* <TouchableOpacity
-        style={{ flexDirection: "row", backgroundColor: "#EEEEEE" }}
-        onPress={() => this.props.navigation.navigate("Story")}
-      > */}
+            
+            
         
         <View
           style={{
@@ -211,6 +204,7 @@ class Home extends Component {
           Sheraton Bali Kuta resort</Text>
           </View>
           </View>
+          
 
           <View
                 style={{

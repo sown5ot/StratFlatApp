@@ -33,9 +33,6 @@ export function login(params) {
                 dispatch(loginFailed(responseJson))
             } else {
                 dispatch(loginSuccess(responseJson))
-                
-
-
             }
         });
       })

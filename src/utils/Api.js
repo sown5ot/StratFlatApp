@@ -70,7 +70,7 @@ export function APIRequestPOST(url, param, isAuth, successCallback, errorCallbac
             // console.log('response', response)
             response.json().then((responseJson) => {
                 if (responseJson) {
-                    console.log('111112222',responseJson)
+                    // console.log('111112222',responseJson)
                     successCallback(responseJson)
                 } else {
                     errorCallback(responseJson.errorMessage)

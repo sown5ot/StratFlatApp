@@ -17,3 +17,4 @@ export {
 
 export { signUpAction, signUpSuccess, signUpFailed } from "./signUp";
 export { skipAction } from "./skip";
+export { getHotelIdRequest, getHotelFromSimSuccess, getHotelFromSimFailed} from './handlingUserInfo';

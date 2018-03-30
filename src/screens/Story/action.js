@@ -30,7 +30,6 @@ export function getHotelServiceAction(id) {
 				console.log(getHotelServiceError(error))
 				dispatch(getHotelServiceError(error));
 			},
-			dispatch(signOut(true))
 		)
 	};
 }

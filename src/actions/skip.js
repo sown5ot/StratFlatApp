@@ -23,8 +23,8 @@ export function skipAction() {
     // console.log(url);
     APIRequest.APIRequestPOST(url, null, false,
       response => {
-        console.log("response", response);
-        console.log("gggggggggggggggggggggggggggggg", JSON.stringify(response.data));
+        // console.log("response", response);
+        // console.log("gggggggggggggggggggggggggggggg", JSON.stringify(response.data));
           // err => {
           //   setTimeout(() => {
           //     dispatch(skipSuccess(response));

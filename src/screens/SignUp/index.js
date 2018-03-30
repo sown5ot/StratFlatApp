@@ -9,7 +9,8 @@ import {
   Platform,
   TouchableOpacity,
   StatusBar,
-  Dimensions
+  Dimensions,
+  TextInput
 } from "react-native";
 import { NavigationActions } from "react-navigation";
 import {
@@ -29,11 +30,11 @@ import {
 } from "native-base";
 import PopupDialog from "react-native-popup-dialog";
 import TouchAble from "react-native-touch-able";
-import * as mConstants from '../../utils/Constants';
+import * as mConstants from "../../utils/Constants";
 import { signUpAction, skipAction } from "../../actions/index";
 import { signUpReducer, skipReducer } from "../../reducers/index";
 import { connect } from "react-redux";
-
+import * as Storage from "../../config/AsyncStorage";
 import { Field, reduxForm } from "redux-form";
 import * as mValidate from "../../utils/Validation";
 import base64 from "base-64";
@@ -46,7 +47,7 @@ const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
 const bg = require("../../../assets/background2.jpg");
 const logo = require("../../../assets/gggg.png");
-const login = require("../../../assets/btnstartt.png");
+const startImage = require("../../../assets/btnstartt.png");
 
 const required = value => (value ? undefined : "Required");
 const maxLength = max => value =>
@@ -79,15 +80,15 @@ class SignUpForm extends Component {
 
   componentWillReceiveProps(props) {
     if (props.signUpReducer.success || props.skipReducer.success) {
-      AsyncStorage.setItem(mConstants.USER_INFO, JSON.stringify(props.skipReducer.data))
+      Storage.setData(mConstants.USER_INFO, props.skip);
       setTimeout(() => {
         this.props.navigation.navigate("Home");
       }, 500);
     } else {
-      if (props.signUpReducer.errorMessage){
+      if (props.signUpReducer.errorMessage) {
         alert(props.signUpReducer.errorMessage);
       }
-      if (props.skipReducer.errorMessage){
+      if (props.skipReducer.errorMessage) {
         alert(props.skipReducer.errorMessage);
       }
     }
@@ -135,158 +136,113 @@ class SignUpForm extends Component {
     }
   }
 
-  // skip() {
-  //   // console.log("skip")
-  //   this.props.skip();
-  //   this.props.navigation.navigate("Home");
-  // }
-
   render() {
     return (
       <Container>
         <StatusBar barStyle="light-content" />
-
         <ImageBackground source={bg} style={styles.background}>
-          <Content contentContainerStyle={{ flex: 1 }}>
-            <View style={styles.container}>
-              <View style={styles.logoContainer}>
-                <Image source={logo} style={styles.logo} />
-                <Text style={styles.textCreateAccount}>Create Account</Text>
-              </View>
+          <View style={{ flex: 1 }}>
+            <View style={styles.logoContainer}>
+              <Image source={logo} style={styles.logo} />
             </View>
-            <View style={styles.infoContainer}>
-              <View style={styles.formLogin}>
-                <View style={styles.form}>
-                  {/* <Field
-                    name="email"
-                    component={this.renderInput}
-                    type="email"
-                    validate={[email, required]}
+            <View style={styles.screenNameContainer}>
+              <Text style={styles.screenNameText}>Create Account</Text>
+            </View>
+          </View>
+          <View style={{ flex: 1 }}>
+            <View style={styles.inputContainer}>
+              <View style={{ flex: 2 }}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Input Email"
+                  placeholderTextColor="black"
+                  underlineColorAndroid="transparent"
+                  onChangeText={text => this.setState({ email: text })}
+                />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Choose Password"
+                  placeholderTextColor="black"
+                  underlineColorAndroid="transparent"
+                  secureTextEntry={true}
+                  onChangeText={text => this.setState({ password: text })}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Button onPress={() => this.signUp()} style={styles.btnStart}>
+                  <Image
+                    source={startImage}
+                    style={styles.imageStart}
+                    resizeMode="cover"
                   />
-                  <Field
-                    name="password"
-                    component={this.renderInput}
-                    type="password"
-                    validate={[alphaNumeric, minLength8, maxLength15, required]}
-                  /> */}
-                  <Item
-                    style={{
-                      backgroundColor: "#fff",
-                      opacity: 0.5,
-                      borderRadius: 5,
-                      height: 40,
-                      marginTop: 10
-                    }}
-                  >
-                    <Label style={{ marginLeft: 5 }}>Email</Label>
-                    <Input
-                      onChangeText={text => this.setState({ email: text })}
-                      value={this.state.email}
-                    />
-                  </Item>
-                  <Item
-                    style={{
-                      backgroundColor: "#fff",
-                      opacity: 0.5,
-                      borderRadius: 5,
-                      height: 40,
-                      marginTop: 10
-                    }}
-                  >
-                    <Label style={{ marginLeft: 5 }}>Password</Label>
-                    <Input
-                      onChangeText={text => this.setState({ password: text })}
-                      value={this.state.password}
-                    />
-                  </Item>
-                </View>
-                <View
-                  style={{
-                    flex: 1,
-                    marginRight: 20
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => this.signUp()}
-                    style={styles.btnStart}
-                  >
-                    <Image
-                      source={login}
-                      style={styles.imageStart}
-                      resizeMode="cover"
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={{ backgroundColor: "transparent", flex: 1 }}>
-                <View style={{ flex: 1 }}>
-                  <Button
-                    rounded
-                    primary
-                    block
-                    large
-                    style={styles.loginBtn}
-                    onPress={() => this.login()}
-                  >
-                    <Text
-                      style={
-                        Platform.OS === "android"
-                          ? { fontSize: 14, textAlign: "center" }
-                          : { fontSize: 14, fontWeight: "700" }
-                      }
-                    >
-                      sign in with Facebook
-                    </Text>
-                  </Button>
-                </View>
-
-                <View style={{ flex: 1 }}>
-                  <View style={{ flexDirection: "row" }}>
-                    <Left>
-                      <Button
-                        light
-                        small
-                        transparent
-                        style={styles.skip}
-                        onPress={() => this.props.skip()}
-                      >
-                        <Text
-                          style={
-                            (
-                              [styles.skipBtn],
-                              { top: Platform.OS === "ios" ? null : 0 }
-                            )
-                          }
-                        >
-                          Skip
-                        </Text>
-                      </Button>
-                    </Left>
-                    <Right>
-                      <Button
-                        light
-                        small
-                        transparent
-                        style={styles.skip}
-                        onPress={() => this.props.navigation.navigate("Login")}
-                      >
-                        <Text
-                          style={
-                            (
-                              [styles.skipBtn],
-                              { top: Platform.OS === "ios" ? null : 0 }
-                            )
-                          }
-                        >
-                          Had an Account
-                        </Text>
-                      </Button>
-                    </Right>
-                  </View>
-                </View>
+                </Button>
               </View>
             </View>
-          </Content>
+            <View style={{ flex: 1 }}>
+              <Button
+                rounded
+                primary
+                block
+                large
+                style={styles.fbLoginBtn}
+                onPress={() => this.login()}
+              >
+                <Text
+                  style={
+                    Platform.OS === "android"
+                      ? { fontSize: 16, textAlign: "center" }
+                      : { fontSize: 16, fontWeight: "700" }
+                  }
+                >
+                  sign in with Facebook
+                </Text>
+              </Button>
+            </View>
+            <View
+              style={styles.bottomContainer}
+            >
+              <Left>
+                <Button
+                  light
+                  small
+                  transparent
+                  style={styles.skip}
+                  onPress={() => this.props.skip()}
+                >
+                  <Text
+                    style={
+                      (
+                        [styles.skipBtn],
+                        { top: Platform.OS === "ios" ? null : 0 }
+                      )
+                    }
+                  >
+                    Skip
+                  </Text>
+                </Button>
+              </Left>
+              <Right>
+                <Button
+                  light
+                  small
+                  transparent
+                  style={styles.skip}
+                  onPress={() => this.props.navigation.navigate("Login")}
+                >
+                  <Text
+                    style={
+                      (
+                        [styles.skipBtn],
+                        { top: Platform.OS === "ios" ? null : 0 }
+                      )
+                    }
+                  >
+                    Had an Account
+                  </Text>
+                </Button>
+              </Right>
+            </View>
+          </View>
         </ImageBackground>
       </Container>
     );

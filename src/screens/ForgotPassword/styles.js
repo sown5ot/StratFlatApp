@@ -13,7 +13,7 @@ export default {
   },
   blackText: {
     color: "#75716e",
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold'
   },
   blueText: {

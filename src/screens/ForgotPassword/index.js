@@ -1,6 +1,6 @@
 // @flow
-import React, {Component} from "react";
-import {Dimensions, Image, ImageBackground, StatusBar} from "react-native";
+import React, { Component } from "react";
+import { Dimensions, Image, ImageBackground, StatusBar } from "react-native";
 import {
   Container,
   Content,
@@ -17,9 +17,9 @@ import {
   Toast,
   Footer
 } from "native-base";
-import {Field, reduxForm} from "redux-form";
+import IonIcon from "react-native-vector-icons/Ionicons"
+import { Field, reduxForm } from "redux-form";
 import styles from "./styles";
-
 
 const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
@@ -41,11 +41,11 @@ class ForgotPasswordForm extends Component {
     };
   }
 
-  renderInput({input, label, type, meta: {touched, error, warning}}) {
+  renderInput({ input, label, type, meta: { touched, error, warning } }) {
     return (
       <View>
         <Item error={error && touched} rounded style={styles.inputGrp}>
-          <Icon active name="mail" style={{color: "#fff"}} />
+          <Icon active name="mail" style={{ color: "#fff" }} />
           <Input
             placeholderTextColor="#FFF"
             style={styles.input}
@@ -79,7 +79,7 @@ class ForgotPasswordForm extends Component {
         text: "Enter Valid Email",
         duration: 2500,
         position: "top",
-        textStyle: {textAlign: "center"}
+        textStyle: { textAlign: "center" }
       });
     }
   }
@@ -96,76 +96,136 @@ class ForgotPasswordForm extends Component {
               <Icon active name="menu" />
             </Button>
           </Left>
-          <Body>   
+          <Body>
+            <Text style={{ fontWeight: "bold", fontSize: 12}}>MOBILE BALANCE</Text>
           </Body>
           <Right />
         </Header>
-          <View style={{
+        <View
+          style={{
             flex: 1,
-            backgroundColor: "#f8f8f8",
-            }}>
-            <View style={{flex: 1}}>
-              <View style={styles.bigTextBox}>
-                <View style={{flex: 1, justifyContent: 'center', marginLeft: 12}}>
-                  <Text style={styles.blackText}>PHONE NUMBER</Text>
-                </View>
-                <View style={styles.transparentLine}/> 
-                <View style={{flex: 2, flexDirection: 'row', margin: 12}}>
-                  <View style={{flex: 1, justifyContent: 'center'}}>
-                    <Text style={styles.blueText}>+852 1234 567</Text>
-                  </View>
-                  <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
-                    {/* <Text style={styles.blueText}>Logo</Text> */}
-                    <Icon active name="copy"></Icon>
-                  </View>
-                </View>
+            backgroundColor: "#f8f8f8"
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <View style={styles.bigTextBox}>
+              <View
+                style={{ flex: 1, justifyContent: "center", marginLeft: 12 }}
+              >
+                <Text style={styles.blackText}>PHONE NUMBER</Text>
               </View>
-              <View style={{flex: 1, flexDirection: 'row'}}>
-                <View style={styles.topTextBox}>                 
-                  <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    <Text style={styles.blackText}>REMAINING BALANCE</Text>
-                  </View>
-                  <View style={styles.transparentLine}/> 
-                  <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
-                    <Text style={styles.blueText}>HK$ 9999</Text>
-                  </View>  
+              <View style={styles.transparentLine} />
+              <View style={{ flex: 2, flexDirection: "row", margin: 12 }}>
+                <View style={{ flex: 1, justifyContent: "center" }}>
+                  <Text style={styles.blueText}>+852 1234 567</Text>
                 </View>
-                <View style={styles.topTextBox}>                 
-                  <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    <Text style={styles.blackText}>LAST TOP UP</Text>
-                  </View>
-                  <View style={styles.transparentLine}/> 
-                  <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
-                    <Text style={styles.blueText}>HK$ 9999</Text>
-                  </View>  
+                <View
+                  style={{
+                    flex: 1,
+                    margin: 10,
+                    alignItems: "flex-end",
+                    justifyContent: "center"
+                  }}
+                >
+                  {/* <Text style={styles.blueText}>Logo</Text> */}
+                  <IonIcon name="md-copy" size={30}/>
                 </View>
               </View>
             </View>
-            <View style={styles.transparentLine}/>
-            <View style={{flex: 1, justifyContent: 'flex-start'}}>
-              <View style={{flex: 1, flexDirection: 'row'}}>
-                <View style={styles.textBox}>                 
-                  <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    <Text style={styles.blackText}>DATA RATE</Text>
-                  </View>
-                  <View style={styles.transparentLine}/> 
-                  <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
-                    <Text style={styles.blueText}>HK$ 15/MB</Text>
-                  </View>  
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={styles.topTextBox}>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <Text style={styles.blackText}>REMAINING BALANCE</Text>
+                </View>
+                <View style={styles.transparentLine} />
+                <View
+                  style={{
+                    flex: 2,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <Text style={styles.blueText}>HK$ 9999</Text>
+                </View>
               </View>
-              <View style={styles.textBox}>                 
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+              <View style={styles.topTextBox}>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <Text style={styles.blackText}>LAST TOP UP</Text>
+                </View>
+                <View style={styles.transparentLine} />
+                <View
+                  style={{
+                    flex: 2,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <Text style={styles.blueText}>HK$ 9999</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View style={styles.transparentLine} />
+          <View style={{ flex: 1, justifyContent: "flex-start" }}>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={styles.textBox}>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <Text style={styles.blackText}>DATA RATE</Text>
+                </View>
+                <View style={styles.transparentLine} />
+                <View
+                  style={{
+                    flex: 2,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <Text style={styles.blueText}>HK$ 15/MB</Text>
+                </View>
+              </View>
+              <View style={styles.textBox}>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
                   <Text style={styles.blackText}>CALL RATE</Text>
                 </View>
-                <View style={styles.transparentLine}/> 
-                <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
+                <View style={styles.transparentLine} />
+                <View
+                  style={{
+                    flex: 2,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
                   <Text style={styles.blueText}>HK$ 8/MIN</Text>
-                </View>  
-              </View>  
+                </View>
+              </View>
             </View>
-            <View style={{flex: 1}}/>
-          </View>  
-        </View>              
+            <View style={{ flex: 1 }} />
+          </View>
+        </View>
       </Container>
     );
   }

@@ -18,6 +18,7 @@ import Timeline from "./screens/Timeline";
 import Feedback from "./screens/Feedback/";
 import Profile from "./screens/Profile/";
 import Settings from "./screens/Settings";
+import HandlingUserInfo from './screens/HandlingUserInfo';
 
 const Drawer = DrawerNavigator(
   {
@@ -45,11 +46,12 @@ const App = StackNavigator(
     Story: { screen: Story },
     Comments: { screen: Comments },
     Channel: { screen: Channel },
-    Drawer: { screen: Drawer }
+    Drawer: { screen: Drawer },
+    HandlingUserInfo: {screen: HandlingUserInfo}
   },
   {
     index: 0,
-    initialRouteName: "SignUp",
+    initialRouteName: "Login",
     headerMode: "none"
   }
 );

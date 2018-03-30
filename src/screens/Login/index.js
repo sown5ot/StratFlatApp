@@ -1,8 +1,15 @@
 // @flow
 import React, { Component } from "react";
 import { connect } from "react-redux";
+
 import { NavigationActions } from "react-navigation";
-import { Image, ImageBackground, Keyboard, Platform, StatusBar } from "react-native";
+import {
+  Image,
+  ImageBackground,
+  Platform,
+  StatusBar,
+  TextInput
+} from "react-native";
 import {
   Container,
   Content,
@@ -18,17 +25,20 @@ import {
   Label
 } from "native-base";
 import { Field, reduxForm } from "redux-form";
-import base64 from 'base-64';
-import {login} from "./actions";
+import * as Storage from "../../config/AsyncStorage";
+import * as Constant from "../../utils/Constants";
+import { signUpAction, skipAction } from "../../actions/index";
+import { signUpReducer, skipReducer } from "../../reducers/index";
+import { login } from "./actions";
 import loginFetch from "./reducer";
-import { skipAction } from "../../actions/index";
 
 import styles from "./styles";
+import HandlingUserInfo from "../HandlingUserInfo";
 // import commonColor from "../../theme/variables/commonColor";
 
 const bg = require("../../../assets/background2.jpg");
 const logo = require("../../../assets/gggg.png");
-const image = require("../../../assets/btnstartt.png");
+const startImage = require("../../../assets/btnstartt.png");
 
 const required = value => (value ? undefined : "Required");
 const maxLength = max => value =>
@@ -46,21 +56,22 @@ const alphaNumeric = value =>
     ? "Only alphanumeric characters"
     : undefined;
 
-    class Login extends React.Component {
+class Login extends React.Component {
   state = {
-      "email": '',
-      "password": '',
-      "checkLogin": false,
-      
-    };
-  
+    email: "",
+    password: "",
+    checkLogin: false
+  };
+
+  componentDidMount() {}
   renderInput({ input, label, type, meta: { touched, error, warning } }) {
     return (
       <View>
         <Item error={error && touched} rounded style={styles.inputGrp}>
           <Input
-            onChangeText = {text => {this.setStateInput(input.name, text)}}
-            value = {this.state[input.name]}
+            onChangeText={text => {
+              this.setStateInput(input.name, text);
+            }}
             ref={c => (this.textInput = c)}
             placeholderTextColor="#FFF"
             style={styles.input}
@@ -97,15 +108,20 @@ const alphaNumeric = value =>
     }
     return false;
   }
+
   componentWillReceiveProps(props) {
-    if (props.loginFetch.success == true) {
-      
-      console.log("345",props.loginFetch.data)
-      this.props.navigation.navigate("Drawer")
+    if (props.loginFetch.success) {
+      console.log("345", props.loginFetch.data);
+      Storage.setDataJson(Constant.USER_INFO, props.loginFetch.data.data);
+      this.props.navigation.navigate("HandlingUserInfo");
+    } else if (props.skipReducer.success) {
+      Storage.setDataJson(Constant.USER_INFO, props.skipReducer.data.data);
+      this.props.navigation.navigate("HandlingUserInfo");
+    } else {
+      alert("Login error");
     }
   }
   login() {
-    Keyboard.dismiss();
     if (!this.validateEmail(this.state.email)) {
       alert("Email is not correct");
     } else if (!this.validatePassword()) {
@@ -113,106 +129,121 @@ const alphaNumeric = value =>
     } else {
       var param = {};
       param.email = this.state.email;
-      param.password = base64.encode(this.state.password);
+      param.password = this.state.password;
       this.props.loginAction(param);
-
     }
-  }
-
-  skip() {
-    this.props.skip();
-    this.props.navigation.navigate("Home");
-    // return this.props.navigation.dispatch(
-    //   NavigationActions.reset({
-    //     index: 0,
-    //     actions: [NavigationActions.navigate({ routeName: "Walkthrough" })]
-    //   })
-    // );
   }
 
   render() {
     const navigation = this.props.navigation;
     return (
-      <Container>
-        <StatusBar barStyle="light-content" />
-
+      
         <ImageBackground source={bg} style={styles.background}>
-          <Content contentContainerStyle={{ flex: 1 }}>
-            <View style={styles.container}>
-              <View style={styles.logoContainer}>
-                <Image source={logo} style={styles.logo} />
-                <Text style={styles.textCreateAccount}>Login</Text>
+          <View style={{ flex: 1 }}>
+            <View style={styles.logoContainer}>
+              <Image source={logo} style={styles.logo} />
+            </View>
+            <View style={styles.screenNameContainer}>
+              <Text style={styles.screenNameText}>Login</Text>
+            </View>
+          </View>
+          <View style={{ flex: 1 }}>
+            <View style={styles.inputContainer}>
+              <View style={{ flex: 2 }}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Input Email"
+                  placeholderTextColor="black"
+                  underlineColorAndroid="transparent"
+                  onChangeText={text => this.setState({ email: text })}
+                />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Choose Password"
+                  placeholderTextColor="black"
+                  underlineColorAndroid="transparent"
+                  secureTextEntry={true}
+                  onChangeText={text => this.setState({ password: text })}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Button onPress={() => this.login()} style={styles.btnStart}>
+                  <Image
+                    source={startImage}
+                    style={styles.imageStart}
+                    resizeMode="cover"
+                  />
+                </Button>
               </View>
             </View>
-            <View style={styles.infoContainer}>
-              <View style={styles.formLogin}>
-                <View style={styles.form}>
-                  {/* <Field
-                    name="email"
-                    component={this.renderInput}
-                    type="email"
-                    validate={[email, required]}
-                    // onChange={text1 => this.setState({ email: text1 })}
-                    // onChangeText={onChange}
-                  />
-                  <Field
-                    name="password"
-                    component={this.renderInput}
-                    type="password"
-                    validate={[alphaNumeric, minLength8, maxLength15, required]}
-                    // onChangeText={onChange}
-                    // onChange  ={text => this.setState({ password: text })}
-
-                  /> */}
-                <Item  style={{ backgroundColor: "#fff", opacity: 0.5, borderRadius: 5,height: 40,marginTop: 10  }}>
-                  <Label style={{ marginLeft: 5}}>Email</Label>
-                  <Input 
-                    
-                    onChangeText={(text) => this.setState({ email: text })}
-                    value={this.state.email}
-                  />
-                  
-                </Item>
-                <Item   style={{ backgroundColor: "#fff", opacity: 0.5, borderRadius: 5,height: 40,marginTop: 10 }}>
-                  <Label style={{ marginLeft: 5}} >Password</Label>
-                  <Input
-                    onChangeText={(text) => this.setState({ password: text })}
-                    value={this.state.password}
-                  />
-                  
-                </Item>
-                </View>
-               
-                
-                <View
-                  style={{
-                    flex: 1,
-                    marginRight: 20
-                  }}
+            <View style={{ flex: 1 }}>
+              <Button
+                rounded
+                primary
+                block
+                large
+                style={styles.fbLoginBtn}
+                onPress={() => this.login()}
+              >
+                <Text
+                  style={
+                    Platform.OS === "android"
+                      ? { fontSize: 16, textAlign: "center" }
+                      : { fontSize: 16, fontWeight: "700" }
+                  }
                 >
-                  <Button onPress={() => this.login()} style={styles.btnStart}>
-                    <Image
-                      source={image}
-                      style={styles.imageStart}
-                      resizeMode="cover"
-                    />
-                  </Button>
-                </View>
-              </View>
-              <View style={{ backgroundColor: "transparent", flex: 1 }}>
-                <View style={{ flex: 1 }}>
-                
-                </View>
-                
-              </View>
+                  sign in with Facebook
+                </Text>
+              </Button>
             </View>
-          </Content>
+            <View style={styles.bottomContainer}>
+              <Left>
+                <Button
+                  light
+                  small
+                  transparent
+                  style={styles.skip}
+                  onPress={() => this.props.skip()}
+                >
+                  <Text
+                    style={
+                      (
+                        [styles.skipBtn],
+                        { top: Platform.OS === "ios" ? null : 0 }
+                      )
+                    }
+                  >
+                    Skip
+                  </Text>
+                </Button>
+              </Left>
+              <Right>
+                <Button
+                  light
+                  small
+                  transparent
+                  style={styles.skip}
+                  onPress={() => this.props.navigation.navigate("SignUp")}
+                >
+                  <Text
+                    style={
+                      (
+                        [styles.skipBtn],
+                        { top: Platform.OS === "ios" ? null : 0 }
+                      )
+                    }
+                  >
+                    Sign In
+                  </Text>
+                </Button>
+              </Right>
+            </View>
+          </View>
         </ImageBackground>
-      </Container>
+      
     );
   }
 }
-
 
 const loginform = reduxForm({
   form: "loginform"
@@ -220,12 +251,13 @@ const loginform = reduxForm({
 
 function bindActions(dispatch) {
   return {
-    loginAction: params => dispatch(login(params))
-   
+    loginAction: params => dispatch(login(params)),
+    skip: () => dispatch(skipAction())
   };
 }
 const mapStateToProps = state => ({
-  loginFetch: state.loginFetch
+  loginFetch: state.loginFetch,
+  skipReducer: state.skipReducer
 });
 
 // export default Login;
